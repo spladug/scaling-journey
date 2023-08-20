@@ -1,0 +1,51 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+    - main
+  # workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: |
+        echo BUILD
+
+
+  beta:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: Beta
+      url: https://beta.example.com
+    steps:
+      - name: Deploy
+        run: |
+          echo DEPLOY TO BETA
+
+  staging:
+    needs: beta
+    runs-on: ubuntu-latest
+    environment:
+      name: Staging
+      url: https://staging.example.com
+    steps:
+      - name: Deploy
+        run: |
+          echo DEPLOY TO STAGING
+
+  prod:
+    needs: staging
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: https://app.example.com
+    steps:
+      - name: Deploy
+        run: |
+          echo DEPLOY TO PROD
