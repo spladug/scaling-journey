@@ -20,6 +20,9 @@ jobs:
   beta:
     needs: build
     runs-on: ubuntu-latest
+    concurrency:
+      group: beta
+      cancel-in-progress: true
     environment:
       name: Beta
       url: https://beta.example.com
@@ -31,6 +34,9 @@ jobs:
   staging:
     needs: beta
     runs-on: ubuntu-latest
+    concurrency:
+      group: staging
+      cancel-in-progress: true
     environment:
       name: Staging
       url: https://staging.example.com
@@ -39,9 +45,12 @@ jobs:
         run: |
           echo DEPLOY TO STAGING
 
-  prod:
+  production:
     needs: staging
     runs-on: ubuntu-latest
+    concurrency:
+      group: production
+      cancel-in-progress: true
     environment:
       name: Production
       url: https://app.example.com
